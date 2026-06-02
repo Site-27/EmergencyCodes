@@ -48,7 +48,7 @@ namespace EmergencyCodes.Commands
 
             foreach (var command in AllCommands)
             {
-                response += $"- {command.Command} ({string.Join(", ", command.Aliases)})\n";
+                response += $"\n- {command.Command} ({string.Join(", ", command.Aliases)})";
             }
 
             return false;
