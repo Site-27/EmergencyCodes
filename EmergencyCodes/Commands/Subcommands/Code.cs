@@ -2,41 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using CommandSystem;
-using Exiled.API.Features;
 using UnityEngine;
+using Exiled.API.Features;
 
-namespace EmergencyCodes.Commands
+namespace EmergencyCodes.Commands.Subcommands
 {
-    public class AnnouncementSystem
+    internal class ColorHandler
     {
-
-        public string cassieMessage = Plugin.Instance.Config.GenericCASSIEMessage;
-        public string cassieSubtitles = Plugin.Instance.Config.GenericCASSIESubtitles;
         public Dictionary<string, (byte r, byte g, byte b)> rgbcolors = new Dictionary<string, (byte r, byte g, byte b)>
             {
-                { "amber", ((byte)200, (byte)100, (byte)0) },
-                { "blue", ((byte)75, (byte)105, (byte)200) },
-                { "superblue", ((byte)75, (byte)105, (byte)200) },
-                { "green", ((byte)75, (byte)175, (byte)75) },
-                { "red", ((byte)200, (byte)75, (byte)75) },
-                { "black", ((byte)255, (byte)255, (byte)255) },
-                { "white", ((byte)255, (byte)255, (byte)255) },
+                { "amber", ((byte)255, (byte)150, (byte)50) },
+                { "blue", ((byte)155, (byte)200, (byte)255) },
+                { "superblue", ((byte)155, (byte)200, (byte)255) },
+                { "green", ((byte)200, (byte)255, (byte)200) },
+                { "red", ((byte)255, (byte)200, (byte)200) },
+                { "black", ((byte)200, (byte)200, (byte)200) },
+                { "white", ((byte)200, (byte)200, (byte)200) },
                 { "gray", ((byte)200, (byte)200, (byte)200) },
                 { "supergray", ((byte)200, (byte)200, (byte)200) },
-                { "magenta", ((byte)175, (byte)75, (byte)175) },
+                { "magenta", ((byte)255, (byte)200, (byte)255) },
                 { "yellow", ((byte)175, (byte)175, (byte)105) },
-                { "aqua", ((byte)62, (byte)228, (byte)250) },
-                { "orange", ((byte)200, (byte)100, (byte)0) },
+                { "aqua", ((byte)175, (byte)255, (byte)255) },
+                { "orange", ((byte)255, (byte)150, (byte)50) },
                 { "blank", ((byte)200, (byte)200, (byte)200) },
                 { "superblank", ((byte)200, (byte)200, (byte)200) },
                 { "coldsilver", ((byte)200, (byte)200, (byte)200) }
             };
-
-        public void SendCassieMessage()
-        {
-            Exiled.API.Features.Cassie.MessageTranslated(cassieMessage, cassieSubtitles);
-        }
-
         public void ColorFacilityLights(Color color)
         {
             foreach (var room in Room.List)
@@ -44,11 +35,10 @@ namespace EmergencyCodes.Commands
         }
     }
 
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class Code : ICommand
     {
         public string Command { get; } = "Code";
-        public string[] Aliases { get; } = { "emergencycode", "lockdowncode" };
+        public string[] Aliases { get; } = { "c" };
         public string Description { get; } = "Plays a CASSIE message to match the called code, and changes the facility lights to match the called code (if enabled in config).";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -98,6 +88,7 @@ namespace EmergencyCodes.Commands
                 { "coldsilver", "#c0c0c0" }
             };
 
+            var colorhandler = new ColorHandler();
             var messenger = new AnnouncementSystem();
 
             if (info == "disengage")
@@ -110,7 +101,7 @@ namespace EmergencyCodes.Commands
                 messenger.SendCassieMessage();
 
                 if (Plugin.Instance.Config.ColorLights)
-                    messenger.ColorFacilityLights(Color.white);
+                    colorhandler.ColorFacilityLights(Color.white);
 
                 response = $"Successfully disengaged Code {color}!";
                 Log.Debug($"Code {color} disengaged. Cassie command:" + messenger.cassieMessage + " Cassie subtitles: " + messenger.cassieSubtitles);
@@ -125,11 +116,11 @@ namespace EmergencyCodes.Commands
 
             messenger.SendCassieMessage();
 
-            var (r, g, b) = messenger.rgbcolors[color];
-            Color lightcolor = new Color(r/ 255f, g / 255f, b / 255f);
+            var (r, g, b) = colorhandler.rgbcolors[color];
+            Color lightcolor = new Color(r / 255f, g / 255f, b / 255f);
 
             if (Plugin.Instance.Config.ColorLights)
-                messenger.ColorFacilityLights(lightcolor);
+                colorhandler.ColorFacilityLights(lightcolor);
 
             response = $"Successfully engaged Code {color} with info {info}!";
             Log.Debug($"Code {color} sent. Cassie command:" + messenger.cassieMessage + " Cassie subtitles: " + messenger.cassieSubtitles);
