@@ -107,6 +107,9 @@ namespace EmergencyCodes.Commands.Subcommands
                 Log.Debug($"Code {color} disengaged. Cassie command:" + messenger.cassieMessage + " Cassie subtitles: " + messenger.cassieSubtitles);
                 return true;
             }
+            
+            messenger.cassieMessage = Plugin.Instance.Config.GenericCASSIEMessage;
+            messenger.cassieSubtitles = Plugin.Instance.Config.GenericCASSIESubtitles;
 
             messenger.cassieMessage = messenger.cassieMessage.Replace("{color}", color);
             messenger.cassieMessage = messenger.cassieMessage.Replace("{info}", info);

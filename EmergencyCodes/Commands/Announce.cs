@@ -10,8 +10,8 @@ namespace EmergencyCodes.Commands
     public class AnnouncementSystem
     {
 
-        public string cassieMessage;
-        public string cassieSubtitles;
+        public string cassieMessage = "";
+        public string cassieSubtitles = "";
         public void SendCassieMessage()
         {
             Exiled.API.Features.Cassie.MessageTranslated(cassieMessage, cassieSubtitles);
