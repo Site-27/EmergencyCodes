@@ -94,7 +94,10 @@
   <ItemGroup>
     <Compile Include="Commands\Announce.cs" />
     <Compile Include="Commands\Subcommands\Code.cs" />
+    <Compile Include="Commands\Subcommands\EndofDay.cs" />
+    <Compile Include="Commands\Subcommands\Mtf.cs" />
     <Compile Include="Commands\Subcommands\Startup.cs" />
+    <Compile Include="Commands\Subcommands\Testing.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
