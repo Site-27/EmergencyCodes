@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using CommandSystem;
 using Exiled.API.Features;
 using EmergencyCodes.Commands.Subcommands;
@@ -31,6 +29,8 @@ namespace EmergencyCodes.Commands
         {
             RegisterCommand(new Code());
             RegisterCommand(new Startup());
+            RegisterCommand(new Testing());
+            //RegisterCommand(new Mtf());
         }
 
         protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
